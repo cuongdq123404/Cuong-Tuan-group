@@ -38,6 +38,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Initialize test database
+        run: |
+          until psql -h localhost -U postgres -d postgres -c '\l'; do sleep 1; done
+          psql -h localhost -U postgres -d postgres -c "CREATE DATABASE tododb;"
+          psql -h localhost -U postgres -d tododb -f ./database/database.sql
+        env:
+          PGPASSWORD: postgres
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
