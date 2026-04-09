@@ -13,8 +13,24 @@ const pool = new Pool({
    user: process.env.DB_USER || 'postgres',
    host: process.env.DB_HOST || 'localhost',
    database: process.env.DB_NAME || 'tododb',
-   password: process.env.DB_PASSWORD || 'password',
+   password: process.env.DB_PASSWORD || 'postgres',
    port: process.env.DB_PORT || 5432,
+});
+
+const initializeDatabase = async () => {
+   await pool.query(`
+      CREATE TABLE IF NOT EXISTS todos (
+         id SERIAL PRIMARY KEY,
+         title VARCHAR(255) NOT NULL,
+         completed BOOLEAN DEFAULT false,
+         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+   `);
+};
+
+initializeDatabase().catch((err) => {
+   console.error('Database initialization failed:', err.message);
+   process.exit(1);
 });
 
 app.get('/health', (req, res) => {
