@@ -130,13 +130,13 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          port: ${{ secrets.DEPLOY_PORT }}
+          host: 103.1.236.26
+          username: root
+          password: Riolish@12345
+          port: 22
           script: |
-            cd ${{ secrets.DEPLOY_PATH }}
+            cd /home/app || mkdir -p /home/app && cd /home/app
+            git clone https://github.com/cuongdq123404/Cuong-Tuan-group.git . 2>/dev/null || git -C . pull
             docker-compose pull
             docker-compose up -d --remove-orphans
-            docker-compose exec -T backend npm ci
             echo "✅ Deployment complete!"
