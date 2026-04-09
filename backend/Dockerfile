@@ -14,7 +14,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 
-COPY --from=builder /app . 
+COPY --from=builder /app .
 
 EXPOSE 8080
 CMD ["npm", "start"]
